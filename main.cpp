@@ -17,9 +17,15 @@ char charArr[MAX_NODES];
 
 // Function prototypes
 void buildFrequencyTable(int freq[], const string& filename);
+
+
 int createLeafNodes(int freq[]);
-int buildEncodingTree(int nextFree);
+
+int buildEncodingTree(int nextFree) {
+
+
 void generateCodes(int root, string codes[]);
+
 void encodeMessage(const string& filename, string codes[]);
 
 int main() {
@@ -91,12 +97,29 @@ int createLeafNodes(int freq[]) {
 int buildEncodingTree(int nextFree) {
     // TODO:
     // 1. Create a MinHeap object.
+    MinHeap heap;
     // 2. Push all leaf node indices into the heap.
+    for (int i = 0; i < nextFree; i++)
+        heap.push(i, weightArr);
+    // I used a for loop so it can do continously
+
     // 3. While the heap size is greater than 1:
-    //    - Pop two smallest nodes
+    while (heap.size > 1) {
+        int i1 = heap.pop(weightArr); //smallest node idx
+         int i2 = heap.pop(weightArr); //smallest node idx besides i1
+    //    - Pop two smallest node
+
+        weightArr[nextFree] = weightArr[i1] + weightArr[i2];
+       leftArr[nextFree] = i1;
+        rightArr[nextFree] = i2;
+        charArr[nextFree] = '//';
     //    - Create a new parent node with combined weight
+        heap.push(nextFree, weightArr);
+               nextFree++;
+           }
     //    - Set left/right pointers
     //    - Push new parent index back into the heap
+    return heap.size == 1 ? heap.pop(weightArr): -1;
     // 4. Return the index of the last remaining node (root)
     return -1; // placeholder
 }
