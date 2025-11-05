@@ -17,16 +17,21 @@ char charArr[MAX_NODES];
 
 // Function prototypes
 
-//string filename = "C:/Users/aharun459/Desktop/input.txt";
-void buildFrequencyTable(int freq[], const string& filename );
+//string filename = "C:/Users/aharun459/Desktop/input.txt"; this doesnt work  i tried
+void buildFrequencyTable(int freq[], const string& filename ); //call file name
 
 //const string& filename
-int createLeafNodes(int freq[], const string& filname);
+int createLeafNodes(int freq[] ,const string& filename); //calls
+//int freq[] = the frequency of the index/ how many times a node in this case leetr appears
 
-int buildEncodingTree(int nextFree) ;
+int buildEncodingTree(int nextFree) ; //nextFree = openidx
 
 
 void generateCodes(int root, string codes[]);
+//root = root node
+//codes = holds the array
+
+
 
 void encodeMessage(const string& filename, string codes[]);
 
@@ -36,11 +41,13 @@ void encodeMessage(const string& filename, string codes[]);
         string filename ;
         cout << "Please enter the filename to be encoded: ";
         cin >> filename;
+        // I added this but its not necessary
         // Step 1: Read file and count letter frequencies
         buildFrequencyTable(freq, filename);
 
         // Step 2: Create leaf nodes for each character with nonzero frequency
         int nextFree = createLeafNodes(freq, filename);
+        //filename
 
         // Step 3: Build encoding tree using your heap
         int root = buildEncodingTree(nextFree);
@@ -68,8 +75,8 @@ void encodeMessage(const string& filename, string codes[]);
             exit(1);
         }
 
-        char ch;
-        while (file.get(ch)) {
+        char ch; // holds a character from the open text file
+        while (file.get(ch)) { //so when its opened
          //   cout << ch;
             // Convert uppercase to lowercase
             if (ch >= 'A' && ch <= 'Z')
@@ -86,30 +93,32 @@ void encodeMessage(const string& filename, string codes[]);
 
     // Step 2: Create leaf nodes for each character
     int createLeafNodes(int freq[], const string& filename) {
-        int nextFree = 0;
-        bool used[26] = {false};
+        int openidx = 0; // represents the open index in the array to help insert new nodes
+       // bool used[26] = {false};
 
-        ifstream file(filename);
+       // ifstream file(filename);
 
         char ch;
-       // for (int i = 0; i < 26; ++i) {
-          //  if (freq[i] > 0) {
-        while (file.get(ch)) {
-            if (ch >= 'A' && ch <= 'Z') ch = ch - 'A' + 'a';
-            if (ch >= 'a' && ch <= 'z' && freq[ch-'a'] > 0 && !used[ch-'a']) {
-                charArr[nextFree] = ch;
-                // weightArr[nextFree] = freq[i];
-                weightArr[nextFree] = freq[ch-'a'];
-                leftArr[nextFree] = -1;
-                rightArr[nextFree] = -1;
-                used[ch-'a'] = true;
-                nextFree++;
+        for (int i = 0; i < 26; ++i) {
+            if (freq[i] > 0) { // so it will run through
+       // while (file.get(ch)) {
+       //     if (ch >= 'A' && ch <= 'Z') ch = ch - 'A' + 'a';
+       //     if (ch >= 'a' && ch <= 'z' && freq[ch-'a'] > 0 && !used[ch-'a']) {
+
+
+         //i  thought the code above would work but it didnt
+                charArr[openidx] = 'a'+i; // turns the charcter to the index
+                 weightArr[openidx] = freq[i];
+
+                leftArr[openidx] = -1;
+                rightArr[openidx] = -1; //-1 since we assume they have no children
+                openidx++;
             }
             }
 
 
-    file.close();
-    return nextFree;
+  //  file.close();
+    return openidx;
 
      }
 
@@ -171,7 +180,13 @@ void encodeMessage(const string& filename, string codes[]);
                 }
             }
 
-
+// the if statements condition is if the leaf nodes(-1) equal the code(holding the array)
+            // and the nodes a thorugh z
+            //it will assign the the letter fomr the array to the nodes idex pos
+            //the tree will start with an root from this code stack.push({root, ""});
+            //if it were the tree the a would be the first in the tree or leftmost leaf
+            //then on the right it will move down the alphabet like b and n
+            //else
 
         }
 
